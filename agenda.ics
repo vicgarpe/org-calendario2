@@ -1,5 +1,5 @@
 BEGIN:VCALENDAR
-VERSION:2.0
+VERSION:3.0
 X-WR-CALNAME:agenda
 PRODID:-//Victor García//Emacs with Org mode//EN
 X-WR-TIMEZONE:CEST
