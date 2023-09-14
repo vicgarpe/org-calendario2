@@ -1,9 +1,12 @@
 #!/bin/bash
 
 file_ics=~/Dropbox/Apps/Orgzly/agenda.ics
+file2_ics=~/0n-git/bullettoical/farmacia-seminarios.ics
+
 
 # Copiar el archivo al repositorio local
 cp "$file_ics" .
+cp "$file2_ics" .
 
 # Verificar si la red WiFi es eduroam
 current_wifi=$(iwgetid -r)
@@ -17,7 +20,7 @@ current_time=$(date +"%H:%M")
 
 # Realizar el commit con la hora y el minuto actual
 commit_message="Incorporar nueva agenda a las $current_time"
-git add agenda.ics
+git add agenda.ics farmacia-seminarios.ics
 git commit -m "$commit_message"
 
 # Hacer push al repositorio remoto
