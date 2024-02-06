@@ -22,7 +22,7 @@ current_time=$(date +"%H:%M")
 
 # Realizar el commit con la hora y el minuto actual
 commit_message="Incorporar nueva agenda a las $current_time"
-git add agenda.ics farmacia-seminarios.ics farmacia-talleres.ics
+git add .
 git commit -m "$commit_message"
 
 # Hacer push al repositorio remoto
