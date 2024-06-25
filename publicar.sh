@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Calendarios publicados
+
 file_ics=~/Dropbox/Apps/Orgzly/agenda.ics
-file2_ics=~/0n-git/bullettoical/farmacia-seminarios.ics
-file3_ics=~/0n-git/bullettoical/farmacia-talleres.ics
+file2_ics=~/0n-git/bullettoical/fisio-magistrales.ics
+file3_ics=~/0n-git/bullettoical/fisio-seminarios.ics
+file4_ics=~/0n-git/bullettoical/fisio-talleres.ics
 
 
 # Copiar el archivo al repositorio local
