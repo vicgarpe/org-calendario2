@@ -1,6 +1,6 @@
 .TH subir_blob 1 "Sep 2024" "Version 1.0" "Manual del Usuario"
 .SH NOMBRE
-subir_blob \- Subida de archivos a Azure Blob Storage desde un archivo de configuración
+publica-azure \- Subida de archivos a Azure Blob Storage desde un archivo de configuración
 .SH SINOPSIS
 .B subir_blob
 .RB [ \-h ]
@@ -56,12 +56,12 @@ Ejemplo de archivo de configuración:
 .PP
 Ejemplo básico sin archivo de configuración alternativo (usando la ruta por defecto):
 .EX
-$ python subir_blob.py
+$ publica-azure
 .EE
 .PP
 Ejemplo especificando un archivo de configuración alternativo:
 .EX
-$ python subir_blob.py --config /ruta/a/otro_config.json
+$ publica-azure --config /ruta/a/otro_config.json
 .EE
 .SH ERRORES
 El script manejará y mostrará errores en los siguientes casos:

@@ -1,15 +1,16 @@
 \input texinfo @c -*-texinfo-*-
 @setfilename bullettoical.info
 @settitle bullettoical - Subida de archivos a Azure Blob Storage
-@node Top, , , (vgp)
-@comment %**start of header
-@setchapternewpage odd
-@comment %**end of header
 
 @dircategory VGP Paquetes propios
 @direntry
 * bullettoical: (bullettoical).     Subida de archivos a Azure Blob Storage.
 @end direntry
+
+@node Top, , , (vgp)
+@comment %**start of header
+@setchapternewpage odd
+@comment %**end of header
 
 @title bullettoical: Subida de archivos a Azure Blob Storage
 @chapter Introducción
@@ -28,9 +29,9 @@ Este paquete automatiza la subida de archivos a un contenedor en Azure Blob Stor
 El archivo de configuración está en formato JSON y debe contener los siguientes elementos:
 
 @itemize @bullet
-@item @b{connection_string}: La cadena de conexión a Azure Blob Storage.
-@item @b{container_name}: El nombre del contenedor donde se subirán los archivos.
-@item @b{files}: Una lista de archivos a subir, donde cada entrada tiene los siguientes campos:
+@item @b{connection_string}:  La cadena de conexión a Azure Blob Storage.
+@item @b{container_name}:  El nombre del contenedor donde se subirán los archivos.
+@item @b{files}:  Una lista de archivos a subir, donde cada entrada tiene los siguientes campos:
 @itemize @minus
 @item @b{file_path}: La ruta local del archivo.
 @item @b{blob_name}: El nombre con el que se almacenará el archivo en el blob de Azure.
@@ -39,21 +40,22 @@ El archivo de configuración está en formato JSON y debe contener los siguiente
 
 Ejemplo de archivo de configuración (config.json):
 
+
 @example
-{
+@{
   "connection_string": "DefaultEndpointsProtocol=https;AccountName=tu_cuenta;AccountKey=tu_clave;EndpointSuffix=core.windows.net",
   "container_name": "nombre_del_contenedor",
   "files": [
-    {
+    @{
       "file_path": "ruta/al/archivo1.txt",
       "blob_name": "blob1.txt"
-    },
-    {
+    @},
+    @{
       "file_path": "ruta/al/archivo2.txt",
       "blob_name": "blob2.txt"
-    }
+    @}
   ]
-}
+@}
 @end example
 
 @chapter Argumentos de línea de comandos

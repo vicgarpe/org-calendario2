@@ -1,0 +1,159 @@
+This is bullettoical.info, produced by makeinfo version 6.7 from
+bullettoical.texi.
+
+INFO-DIR-SECTION VGP Paquetes propios
+START-INFO-DIR-ENTRY
+* bullettoical: (bullettoical).     Subida de archivos a Azure Blob Storage.
+END-INFO-DIR-ENTRY
+
+
+File: bullettoical.info,  Node: Top,  Up: (vgp)
+
+1 Introducción
+**************
+
+Este paquete automatiza la subida de archivos a un contenedor en Azure
+Blob Storage.  Los archivos que se van a subir, el nombre del
+contenedor, la cadena de conexión a Azure y los nombres de los blobs
+están definidos en un archivo de configuración en formato JSON.
+
+2 Funcionalidad principal
+*************************
+
+   * Busca el archivo de configuración en un directorio específico
+     dentro de la carpeta de usuario (~/.vgp/bullettoical/).
+   * Si el archivo de configuración no existe, crea las carpetas y un
+     archivo de configuración plantilla que debe ser rellenado por el
+     usuario.
+   * Soporta un argumento opcional (-config o -c) para usar un archivo
+     de configuración alternativo.
+   * Intenta subir los archivos especificados en el archivo de
+     configuración al contenedor de Azure Blob Storage, mostrando
+     mensajes de éxito o captura de errores durante la ejecución.
+
+3 Estructura del archivo de configuración
+*****************************************
+
+El archivo de configuración está en formato JSON y debe contener los
+siguientes elementos:
+
+   * connection_string: La cadena de conexión a Azure Blob Storage.
+   * container_name: El nombre del contenedor donde se subirán los
+     archivos.
+   * files: Una lista de archivos a subir, donde cada entrada tiene los
+     siguientes campos:
+        - file_path: La ruta local del archivo.
+        - blob_name: El nombre con el que se almacenará el archivo en el
+          blob de Azure.
+
+   Ejemplo de archivo de configuración (config.json):
+
+     {
+       "connection_string": "DefaultEndpointsProtocol=https;AccountName=tu_cuenta;AccountKey=tu_clave;EndpointSuffix=core.windows.net",
+       "container_name": "nombre_del_contenedor",
+       "files": [
+         {
+           "file_path": "ruta/al/archivo1.txt",
+           "blob_name": "blob1.txt"
+         },
+         {
+           "file_path": "ruta/al/archivo2.txt",
+           "blob_name": "blob2.txt"
+         }
+       ]
+     }
+
+4 Argumentos de línea de comandos
+*********************************
+
+El script acepta un argumento opcional:
+
+'-c, --config ARCHIVO_CONFIGURACION'
+     Especifica una ruta alternativa al archivo de configuración en
+     formato JSON.
+
+   Si no se pasa este argumento, el script buscará el archivo de
+configuración en la carpeta predeterminada
+(~/.vgp/bullettoical/config.json).  Si no existe, el script creará una
+plantilla de archivo de configuración que debe completarse antes de
+volver a ejecutar el script.
+
+   Ejemplo de uso con archivo de configuración alternativo:
+
+     python subir_blob.py --config /ruta/a/otro_config.json
+
+5 Flujo de ejecución del script
+*******************************
+
+El flujo del script sigue los siguientes pasos:
+
+  1. Cargar configuración: Si se proporciona el argumento -config, el
+     archivo de configuración se cargará desde la ruta especificada.  Si
+     no se especifica un archivo de configuración alternativo, el script
+     buscará el archivo en ~/.vgp/bullettoical/config.json.  Si no
+     existe, se creará esta estructura de carpetas y un archivo de
+     configuración plantilla.
+  2. Validación de la configuración: Se verifica que la cadena de
+     conexión ('connection_string') y el nombre del contenedor
+     ('container_name') estén presentes en el archivo de configuración.
+     Si algún archivo especificado en la lista de 'files' no existe en
+     el sistema local, se mostrará un mensaje de error sin interrumpir
+     el proceso para los otros archivos.
+  3. Subida de archivos: Por cada archivo especificado en la lista de
+     'files', el script intentará subir el archivo al contenedor de
+     Azure Blob Storage.  Si la subida es exitosa, el script mostrará un
+     mensaje de éxito.  Si hay errores de conexión o algún otro problema
+     durante la subida, se capturan las excepciones y se muestra el
+     error correspondiente.
+
+6 Manejo de errores
+*******************
+
+El script tiene un manejo robusto de errores, incluyendo:
+
+   * Error al cargar el archivo de configuración: Si el archivo JSON
+     está malformado o faltan claves necesarias (como la cadena de
+     conexión o el nombre del contenedor), el script termina con un
+     mensaje de error descriptivo.
+   * Error en la conexión a Azure: Capturado y manejado usando la
+     excepción 'AzureError', que muestra mensajes relacionados con
+     problemas de conectividad o credenciales incorrectas.
+   * Error de archivo no encontrado: Si alguno de los archivos en la
+     lista 'files' no se encuentra en el sistema local, el script avisa
+     al usuario pero continúa con los demás archivos.
+
+7 Ejecución con ayuda
+*********************
+
+El script utiliza la librería argparse para gestionar los argumentos de
+línea de comandos.  Si el usuario ejecuta el script con la opción '-h' o
+'--help', se mostrará un mensaje de ayuda describiendo el uso del script
+y los argumentos disponibles.
+
+   Ejemplo de cómo ejecutar el script con ayuda:
+
+     python subir_blob.py -h
+
+8 Mejoras y consideraciones futuras
+***********************************
+
+   * Validaciones adicionales: El script podría validar si la conexión a
+     Azure es exitosa antes de intentar subir los archivos, para evitar
+     subidas fallidas desde el principio.
+   * Notificaciones de progreso: Sería útil implementar una barra de
+     progreso para la subida de archivos grandes.
+   * Logs persistentes: Se podría añadir un sistema de logs para
+     almacenar el historial de subidas y errores en un archivo de
+     registro.
+
+
+
+Tag Table:
+Node: Top241
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

@@ -1,12 +1,12 @@
-#####OJO NO LO HE PROBADO########
-# Nombre del paquete
+# Nombre del paquete y la versión
 PACKAGE_NAME = bullettoical
 VERSION = 1.0.0
 ARCH = all
-PYTHON_SCRIPT = subir_blob.py
-CONFIG_DIR = ~/.vgp/bullettoical/
-BIN_DIR = /usr/local/bin/
-INFO_DIR = /usr/share/info/
+
+# Nombre del script de Python
+PYTHON_SCRIPT = publica-azure.py
+# Nombre del ejecutable será el mismo que el script de Python pero sin la extensión .py
+EXECUTABLE_NAME = $(basename $(PYTHON_SCRIPT))
 
 # Directorios para la estructura de paquetes Debian
 BUILD_DIR = build
@@ -14,9 +14,15 @@ DEB_DIR = $(BUILD_DIR)/$(PACKAGE_NAME)_$(VERSION)
 DEB_BIN_DIR = $(DEB_DIR)/usr/local/bin
 DEB_DOC_DIR = $(DEB_DIR)/usr/share/doc/$(PACKAGE_NAME)
 DEB_INFO_DIR = $(DEB_DIR)/usr/share/info
+DEB_MAN_DIR = $(DEB_DIR)/usr/share/man/man1
 
 # Nombre del archivo .deb final
 DEB_PACKAGE = $(PACKAGE_NAME)_$(VERSION)_$(ARCH).deb
+
+# Rutas a los archivos fuente de info y man
+INFO_TEXI_FILE = info/$(PACKAGE_NAME).texi
+INFO_FILE = $(PACKAGE_NAME).info
+MAN_FILE = man/$(EXECUTABLE_NAME).1
 
 .PHONY: all clean build deb install
 
@@ -24,19 +30,36 @@ DEB_PACKAGE = $(PACKAGE_NAME)_$(VERSION)_$(ARCH).deb
 all: clean build deb
 
 # Crear el binario de Python con PyInstaller
-build:
-	@echo "=== Creando el binario de Python ==="
-	pyinstaller --onefile $(PYTHON_SCRIPT)
+build: $(EXECUTABLE_NAME) $(INFO_FILE) $(MAN_FILE)
 	@echo "=== Preparando la estructura de carpetas del paquete Debian ==="
 	mkdir -p $(DEB_BIN_DIR)
 	mkdir -p $(DEB_DOC_DIR)
 	mkdir -p $(DEB_INFO_DIR)
+	mkdir -p $(DEB_MAN_DIR)
 	@echo "=== Copiando binario al directorio de destino ==="
-	cp dist/$(PACKAGE_NAME) $(DEB_BIN_DIR)/$(PACKAGE_NAME)
-	@echo "=== Copiando documentación ==="
-	cp -r doc/* $(DEB_DOC_DIR)/
+	cp dist/$(EXECUTABLE_NAME) $(DEB_BIN_DIR)/$(EXECUTABLE_NAME)
+	@echo "=== Copiando documentación (si existe) ==="
+	if [ -d "doc" ]; then cp -r doc/* $(DEB_DOC_DIR)/; else echo "No se encontró la carpeta 'doc', omitiendo."; fi
 	@echo "=== Copiando archivo info ==="
-	cp $(PACKAGE_NAME).info $(DEB_INFO_DIR)
+	cp $(INFO_FILE) $(DEB_INFO_DIR)
+	@echo "=== Copiando archivo man ==="
+	cp $(MAN_FILE) $(DEB_MAN_DIR)/$(EXECUTABLE_NAME).1
+
+# Crear el ejecutable a partir del script de Python usando PyInstaller
+$(EXECUTABLE_NAME): $(PYTHON_SCRIPT)
+	@echo "=== Creando el binario de Python ==="
+	pyinstaller --onefile $(PYTHON_SCRIPT)
+	@echo "=== Ejecutable generado con nombre: $(EXECUTABLE_NAME) ==="
+
+# Crear el archivo .info a partir del .texi
+$(INFO_FILE): $(INFO_TEXI_FILE)
+	@echo "=== Generando archivo .info a partir de .texi ==="
+	makeinfo --output=$(INFO_FILE) $(INFO_TEXI_FILE)
+
+# Usar el archivo man desde la carpeta man/
+$(MAN_FILE):
+	@echo "=== Archivo man encontrado en la carpeta man/ ==="
+	if [ ! -f $(MAN_FILE) ]; then echo "Archivo man no encontrado"; exit 1; fi
 
 # Crear el paquete Debian
 deb: build
@@ -56,10 +79,9 @@ deb: build
 # Limpiar archivos de compilación
 clean:
 	@echo "=== Limpiando archivos anteriores ==="
-	rm -rf dist build *.deb $(PACKAGE_NAME).spec
+	rm -rf dist build *.deb $(EXECUTABLE_NAME).spec $(INFO_FILE)
 
 # Instalar el paquete Debian en el sistema local
-install: deb
+install:
 	@echo "=== Instalando el paquete ==="
-	sudo dpkg -i $(DEB_PACKAGE)
-
+	@echo "Instala de forma manual"

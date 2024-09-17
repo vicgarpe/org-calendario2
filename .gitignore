@@ -1,5 +1,7 @@
 # Ignorar entorno virtual (en caso de que la carpeta sea .venv)
 .venv/
+build/
+dist/
 
 # Ignorar archivos compilados de Python
 *.pyc
