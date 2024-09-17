@@ -1,6 +1,6 @@
 # Nombre del paquete y la versión
 PACKAGE_NAME = bullettoical
-VERSION = 1.0.0
+VERSION = 1.0.1
 ARCH = all
 
 # Nombre del script de Python
@@ -72,6 +72,9 @@ deb: build
 	echo "Architecture: $(ARCH)" >> $(DEB_DIR)/DEBIAN/control
 	echo "Maintainer: Tu Nombre <tuemail@dominio.com>" >> $(DEB_DIR)/DEBIAN/control
 	echo "Description: Subida de archivos a Azure Blob Storage desde un archivo de configuración" >> $(DEB_DIR)/DEBIAN/control
+	@echo "=== Copiando archivos postinst y prerm ==="
+	cp DEBIAN/* $(DEB_DIR)/DEBIAN
+	chmod 0775 $(DEB_DIR)/DEBIAN/p*
 	@echo "=== Generando el paquete .deb ==="
 	dpkg-deb --build $(DEB_DIR)
 	@echo "=== Paquete Debian generado: $(DEB_PACKAGE) ==="

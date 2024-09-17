@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+# Obtener el nombre del usuario que ha iniciado sesión
+USER=$(logname)
+
+# Variables
+FILE_TO_MONITOR="/home/$USER/Dropbox/Apps/Orgzly/agenda.ics"
+SERVICE_NAME="vgpAgendaICS"
+SCRIPT_TO_EXECUTE="/usr/local/bin/publica-azure"
+
+# Comprobar si el ejecutable existe
+if [ ! -f "$SCRIPT_TO_EXECUTE" ]; then
+    echo "Error: El script $SCRIPT_TO_EXECUTE no existe."
+    exit 1
+fi
+
+# Crear el archivo de servicio systemd
+cat <<EOL > /etc/systemd/system/${SERVICE_NAME}.service
+[Unit]
+Description=Servicio activado por cambios en ${FILE_TO_MONITOR}
+
+[Service]
+User=${USER}
+ExecStart=${SCRIPT_TO_EXECUTE}
+Environment=HOME=/home/${USER}
+Environment=USER=${USER}
+WorkingDirectory=/home/${USER}
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+# Crear el archivo de path unit systemd
+cat <<EOL > /etc/systemd/system/${SERVICE_NAME}.path
+[Unit]
+Description=Monitoreo de cambios en ${FILE_TO_MONITOR}
+
+[Path]
+PathModified=${FILE_TO_MONITOR}
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+# Recargar systemd, habilitar y arrancar el servicio
+systemctl daemon-reload
+systemctl enable --now ${SERVICE_NAME}.path
+
+# Mensaje de confirmación
+echo "El servicio ${SERVICE_NAME} ha sido habilitado y está monitoreando ${FILE_TO_MONITOR} para el usuario ${USER}."

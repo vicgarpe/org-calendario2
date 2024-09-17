@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+SERVICE_NAME="vgpAgendaICS"
+
+# Detener y deshabilitar el servicio antes de eliminar el paquete
+systemctl stop ${SERVICE_NAME}.path || true
+systemctl disable ${SERVICE_NAME}.path || true
+
+# Eliminar los archivos del servicio
+rm -f /etc/systemd/system/${SERVICE_NAME}.path
+rm -f /etc/systemd/system/${SERVICE_NAME}.service
+
+# Recargar systemd para aplicar los cambios
+systemctl daemon-reload
