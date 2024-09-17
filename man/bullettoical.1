@@ -1,0 +1,79 @@
+.TH subir_blob 1 "Sep 2024" "Version 1.0" "Manual del Usuario"
+.SH NOMBRE
+subir_blob \- Subida de archivos a Azure Blob Storage desde un archivo de configuración
+.SH SINOPSIS
+.B subir_blob
+.RB [ \-h ]
+.RB [ \-c ]
+.IR archivo_configuracion
+.SH DESCRIPCIÓN
+El script \fBsubir_blob\fP sube archivos a un contenedor en Azure Blob Storage especificado en un archivo de configuración en formato JSON. El archivo de configuración contiene la ruta local de los archivos, los nombres de los blobs a crear y la cadena de conexión al servicio de almacenamiento de Azure.
+
+Si el archivo de configuración no se proporciona con la opción \fB-c\fP, el script buscará el archivo en la carpeta predeterminada \fI~/.vgp/bullettoical/config.json\fP. Si no existe, se creará un archivo de configuración plantilla que el usuario deberá completar antes de ejecutar el script nuevamente.
+.SH OPCIONES
+.TP
+\fB\-h\fP, \fB\-\-help\fP
+Muestra este mensaje de ayuda.
+.TP
+\fB\-c\fP \fIarchivo_configuracion\fP, \fB\-\-config\fP \fIarchivo_configuracion\fP
+Especifica la ruta a un archivo de configuración alternativo en formato JSON.
+.SH ARCHIVO DE CONFIGURACIÓN
+El archivo de configuración es un archivo en formato JSON que contiene los siguientes campos:
+
+.RS
+.IP \(bu 2
+\fBconnection_string\fP: La cadena de conexión a Azure Blob Storage.
+.IP \(bu 2
+\fBcontainer_name\fP: El nombre del contenedor en Azure donde se subirán los archivos.
+.IP \(bu 2
+\fBfiles\fP: Una lista de archivos a subir, donde cada entrada tiene los siguientes campos:
+.RS 2
+.IP \- 2
+\fBfile_path\fP: La ruta local del archivo.
+.IP \- 2
+\fBblob_name\fP: El nombre con el que se almacenará el archivo en el blob de Azure.
+.RE
+.RE
+.PP
+Ejemplo de archivo de configuración:
+.EX
+{
+  "connection_string": "DefaultEndpointsProtocol=https;AccountName=tu_cuenta;AccountKey=tu_clave;EndpointSuffix=core.windows.net",
+  "container_name": "nombre_del_contenedor",
+  "files": [
+    {
+      "file_path": "ruta/al/archivo1.txt",
+      "blob_name": "blob1.txt"
+    },
+    {
+      "file_path": "ruta/al/archivo2.txt",
+      "blob_name": "blob2.txt"
+    }
+  ]
+}
+.EE
+.SH EJEMPLOS
+.PP
+Ejemplo básico sin archivo de configuración alternativo (usando la ruta por defecto):
+.EX
+$ python subir_blob.py
+.EE
+.PP
+Ejemplo especificando un archivo de configuración alternativo:
+.EX
+$ python subir_blob.py --config /ruta/a/otro_config.json
+.EE
+.SH ERRORES
+El script manejará y mostrará errores en los siguientes casos:
+.RS
+.IP \(bu 2
+Error al cargar el archivo de configuración si no existe o si tiene formato incorrecto.
+.IP \(bu 2
+Errores de conexión a Azure Blob Storage, como problemas con la cadena de conexión o credenciales inválidas.
+.IP \(bu 2
+Si uno o más archivos especificados en la configuración no existen en el sistema local.
+.RE
+.SH AUTOR
+Desarrollado por el equipo de integración de Azure.
+.SH VER TAMBIÉN
+\fBpython\fP(1), \fBazure-storage-blob\fP(3)

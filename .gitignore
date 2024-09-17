@@ -1,0 +1,39 @@
+# Ignorar entorno virtual (en caso de que la carpeta sea .venv)
+.venv/
+
+# Ignorar archivos compilados de Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignorar archivos de configuración de entornos de desarrollo
+.vscode/
+.idea/
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar archivos temporales comunes del sistema operativo
+.DS_Store  # MacOS
+Thumbs.db  # Windows
+
+# Ignorar archivos generados por Emacs
+*~
+\#*\#
+.\#*
+
+# Ignorar bloqueos de Emacs
+*.swp
+*.swo
+*~
+.#*
+
+# Archivos temporales generales y de respaldo
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# Ignorar archivos de test/output
+test_output/
+coverage/
