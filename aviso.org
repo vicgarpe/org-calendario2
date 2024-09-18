@@ -106,6 +106,47 @@ python subir_blob.py -h
 - **Logs persistentes**: Se podría añadir un sistema de logs para almacenar el historial de subidas y errores en un archivo de registro.
 
 
+** Makefile para generar el paquete a distribuir
+
+<2024-09-17 mar> Pruebo el funcionamiento del [[file:Makefile][Makefile]], funciona perfectamente.
+
+
+** Servicio systemd
+*** Verificar si el servicio está activo
+Para verificar si el servicio **vgpAgendaICS** está activo, utiliza el siguiente comando:
+
+#+BEGIN_SRC bash
+systemctl status vgpAgendaICS
+#+END_SRC
+
+Este comando te mostrará si el servicio está en ejecución (activo), junto con detalles adicionales como el PID y los últimos logs generados.
+
+*** Leer los mensajes (logs) del servicio
+Para leer los mensajes o logs del servicio **vgpAgendaICS**, utiliza el siguiente comando:
+
+#+BEGIN_SRC bash
+journalctl -u vgpAgendaICS
+#+END_SRC
+
+Este comando te mostrará los logs asociados al servicio **vgpAgendaICS**.
+
+**Opciones adicionales**:
+
+- Ver solo los logs recientes en tiempo real:
+  
+  #+BEGIN_SRC bash
+  journalctl -u vgpAgendaICS -f
+  #+END_SRC
+  
+  Esto te permitirá ver los logs en vivo a medida que el servicio genera nuevos eventos.
+
+- Ver los logs desde una fecha específica:
+  
+  #+BEGIN_SRC bash
+  journalctl -u vgpAgendaICS --since "2024-09-18"
+  #+END_SRC
+  
+  Con esto puedes limitar la visualización de logs a partir de una fecha específica.
 
 
 
@@ -114,7 +155,8 @@ python subir_blob.py -h
 
 
 * Tareas
-** TODO Crear el script python para subir ics
+** DONE Crear el script python para subir ics
+CLOSED: [2024-09-18 mié 09:19]
 El script lo inicio aquí.
 
 * Control de cambios

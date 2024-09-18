@@ -1,6 +1,6 @@
 # Nombre del paquete y la versión
 PACKAGE_NAME = bullettoical
-VERSION = 1.0.1
+VERSION = 1.0.2
 ARCH = all
 
 # Nombre del script de Python
@@ -24,13 +24,14 @@ INFO_TEXI_FILE = info/$(PACKAGE_NAME).texi
 INFO_FILE = $(PACKAGE_NAME).info
 MAN_FILE = man/$(EXECUTABLE_NAME).1
 
+
 .PHONY: all clean build deb install
 
 # Regla principal
 all: clean build deb
 
 # Crear el binario de Python con PyInstaller
-build: $(EXECUTABLE_NAME) $(INFO_FILE) $(MAN_FILE)
+build: $(DIST_DIR)/$(EXECUTABLE_NAME) $(INFO_FILE) $(MAN_FILE)
 	@echo "=== Preparando la estructura de carpetas del paquete Debian ==="
 	mkdir -p $(DEB_BIN_DIR)
 	mkdir -p $(DEB_DOC_DIR)
@@ -45,11 +46,13 @@ build: $(EXECUTABLE_NAME) $(INFO_FILE) $(MAN_FILE)
 	@echo "=== Copiando archivo man ==="
 	cp $(MAN_FILE) $(DEB_MAN_DIR)/$(EXECUTABLE_NAME).1
 
-# Crear el ejecutable a partir del script de Python usando PyInstaller
-$(EXECUTABLE_NAME): $(PYTHON_SCRIPT)
+
+# Crear el ejecutable a partir del script de Python usando Pyinstaller
+$(DIST_DIR)/$(EXECUTABLE_NAME): $(PYTHON_SCRIPT) 
 	@echo "=== Creando el binario de Python ==="
-	pyinstaller --onefile $(PYTHON_SCRIPT)
-	@echo "=== Ejecutable generado con nombre: $(EXECUTABLE_NAME) ==="
+	pyinstaller --onefile publica-azure.py
+	@echo "=== Binario creado con éxito ==="
+
 
 # Crear el archivo .info a partir del .texi
 $(INFO_FILE): $(INFO_TEXI_FILE)

@@ -18,12 +18,6 @@
 Este paquete automatiza la subida de archivos a un contenedor en Azure Blob Storage. Los archivos que se van a subir, el nombre del contenedor, la cadena de conexión a Azure y los nombres de los blobs están definidos en un archivo de configuración en formato JSON. 
 
 @chapter Funcionalidad principal
-@itemize @bullet
-@item Busca el archivo de configuración en un directorio específico dentro de la carpeta de usuario (~/.vgp/bullettoical/).
-@item Si el archivo de configuración no existe, crea las carpetas y un archivo de configuración plantilla que debe ser rellenado por el usuario.
-@item Soporta un argumento opcional (--config o -c) para usar un archivo de configuración alternativo.
-@item Intenta subir los archivos especificados en el archivo de configuración al contenedor de Azure Blob Storage, mostrando mensajes de éxito o captura de errores durante la ejecución.
-@end itemize
 
 @chapter Estructura del archivo de configuración
 El archivo de configuración está en formato JSON y debe contener los siguientes elementos:
@@ -107,6 +101,45 @@ Ejemplo de cómo ejecutar el script con ayuda:
 @example
 python subir_blob.py -h
 @end example
+
+@chapter Funcionamiento como servicio
+@itemize @bullet
+@item Para verificar si el servicio @code{vgpAgendaICS} está activo, utiliza el siguiente comando:
+
+@smallexample
+systemctl status vgpAgendaICS
+@end smallexample
+
+Este comando te mostrará si el servicio está en ejecución (activo), junto con detalles como el PID y los últimos logs generados.
+
+@item Para leer los mensajes o logs del servicio @code{vgpAgendaICS}, utiliza el siguiente comando:
+
+@smallexample
+journalctl -u vgpAgendaICS
+@end smallexample
+
+Este comando te mostrará los logs asociados al servicio @code{vgpAgendaICS}.
+
+@item Opciones adicionales:
+
+- Ver los logs recientes en tiempo real:
+@smallexample
+journalctl -u vgpAgendaICS -f
+@end smallexample
+
+- Ver los logs desde una fecha específica:
+@smallexample
+journalctl -u vgpAgendaICS --since "2024-09-18"
+@end smallexample
+
+@end itemize
+
+@itemize @bullet
+@item Busca el archivo de configuración en un directorio específico dentro de la carpeta de usuario (~/.vgp/bullettoical/).
+@item Si el archivo de configuración no existe, crea las carpetas y un archivo de configuración plantilla que debe ser rellenado por el usuario.
+@item Soporta un argumento opcional (--config o -c) para usar un archivo de configuración alternativo.
+@item Intenta subir los archivos especificados en el archivo de configuración al contenedor de Azure Blob Storage, mostrando mensajes de éxito o captura de errores durante la ejecución.
+@end itemize
 
 @chapter Mejoras y consideraciones futuras
 @itemize @bullet
